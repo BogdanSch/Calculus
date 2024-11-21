@@ -14,7 +14,7 @@ public static class Proof
         }
         else
         {
-            result.Add($"Step 1: Since the number {number} is odd, it can be written as n = 2k + 1.");
+            result.Add($"Step 1: Since the number {number} can't be written in the form of n = 2k, it's odd.");
             result.Add($"Step 2: The number {number} is not divisible by 2.");
         }
 
@@ -58,13 +58,13 @@ public static class Proof
         return result;
     }
 
-    public static List<string> ProveSumOfOddNumbers()
+    public static List<string> ProveSumOfOddNumbers(Func<int, int> calculateSumOfOddNumbers)
     {
         return ProofByInduction(
             baseCaseValidator: (int n) =>
             {
-                int sum = CalculateSumOfOddNumbers(n);
-                return sum == n * n;
+                int sum = calculateSumOfOddNumbers(n);
+                return sum == 1;
             },
             inductionHypothesisWriter: (List<string> result) =>
             {
@@ -73,21 +73,12 @@ public static class Proof
             },
             inductionStepValidator: (int k) =>
             {
-                int currentSum = CalculateSumOfOddNumbers(k);
+                int currentSum = calculateSumOfOddNumbers(k);
                 int nextOddNumber = 2 * k + 1;
                 int newSum = currentSum + nextOddNumber;
                 int expectedSum = (k + 1) * (k + 1);
                 return newSum == expectedSum;
             }
         );
-    }
-    private static int CalculateSumOfOddNumbers(int n)
-    {
-        int sum = 1;
-        for (int i = 3, count = 1; count < n; i += 2, count++)
-        {
-            sum += i;
-        }
-        return sum;
     }
 }

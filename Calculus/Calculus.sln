@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculus", "Calculus.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculus.UnitTests", "..\Calculus.UnitTests\Calculus.UnitTests.csproj", "{84E08A7A-326F-4900-9F87-67C82138C2ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculusView", "..\CalculusView\CalculusView.csproj", "{5EEE6A72-B461-4AAE-B252-F4E6BB412213}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{84E08A7A-326F-4900-9F87-67C82138C2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84E08A7A-326F-4900-9F87-67C82138C2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84E08A7A-326F-4900-9F87-67C82138C2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EEE6A72-B461-4AAE-B252-F4E6BB412213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EEE6A72-B461-4AAE-B252-F4E6BB412213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EEE6A72-B461-4AAE-B252-F4E6BB412213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EEE6A72-B461-4AAE-B252-F4E6BB412213}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

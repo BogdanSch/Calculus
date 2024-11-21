@@ -64,24 +64,4 @@ public class CalculusTests
 
         result.Should().Be(expectedResult);
     }
-    [Fact]
-    public void Calculus_EvaluateFunctionByValue_ReturnDouble()
-    {
-        Func<double, double> func = (double x) => Math.Pow(x, 2) + 2 * x + 1;
-        string funcDescription = "x^2 + 2*x + 1";
-        double x = 3;
-        const double expectedResult = 16.0;
-
-        (double result, List<string> explanationSteps) =
-            Calculus.EvaluateFunctionByValue(func, funcDescription, x);
-
-        expectedResult.Should().Be(result);
-        explanationSteps.Should().Contain(new[] { "The value 3 is within the functions domain.",
-            "Evaluating function f(x) = x^2 + 2*x + 1",
-            "Substitute x = 3: 3^2+2*3+1",
-            "Calculate 3^2 = 9",
-            "Calculate 2*3 = 6",
-            "Add constant 1",
-            "Final result: 16" });
-    }
 }

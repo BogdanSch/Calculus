@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Calculus;
 
@@ -11,14 +10,12 @@ public static class Calculus
     }
     public static string DeterminePrime(int number)
     {
-        bool isPrime = true;
-
         for (int i = 2; i < Math.Abs(number); i++)
         {
-            if (number % i == 0) isPrime = false;
+            if (number % i == 0) return "Not Prime";
         }
 
-        return isPrime ? "Prime" : "Not Prime";
+        return "Prime";
     }
     public static int DetermineGCD(int number1, int number2)
     {
@@ -28,7 +25,7 @@ public static class Calculus
     }
     public static int DetermineLCM(int number1, int number2)
     {
-        return (number1 / DetermineGCD(number1, number2)) * number2;
+        return Math.Abs(number1 * number2) / DetermineGCD(number1, number2);
     }
     public static string DeterminePrimeFactors(int n)
     {
@@ -71,7 +68,7 @@ public static class Calculus
         
         for (int i = 2; i < number; i++)
         {
-            if(DetermineGCD(i, number) == 1)
+            if(DetermineGCD(i, number) == 1) //Common factor is one
             {
                 result++;
             }
@@ -94,21 +91,15 @@ public static class Calculus
     }
     private static List<string> GenerateFunctionCalculationSteps(string funcDescription, double x)
     {
-        // Remove spaces and handle Cyrillic characters and case
         string substitutedFunc = funcDescription.Replace(" ", "");
-        substitutedFunc = substitutedFunc.Replace("х", "x").ToLower();
-
-        // Handle negative signs by replacing them with '+-' for easier parsing
         substitutedFunc = substitutedFunc.Replace("-", "+-");
 
-        // Substitute x with the given value
         substitutedFunc = substitutedFunc.Replace("x", x.ToString());
 
-        // Split the function into terms based on '+' sign
-        string[] terms = substitutedFunc.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] terms = substitutedFunc.Split('+', StringSplitOptions.RemoveEmptyEntries);
 
         double result = 0;
-        bool isSubtraction = false; // Flag to handle subtraction
+        bool isSubtraction = false;
         List<string> steps = new List<string>
     {
         $"Substitute x = {x}: {substitutedFunc.Replace("+-", "-")}"
@@ -120,7 +111,6 @@ public static class Calculus
 
             double parsedTerm;
 
-            // Handle terms with exponentiation (e.g., x^2)
             if (cleanTerm.Contains("^"))
             {
                 string[] parts = cleanTerm.Split('^');
@@ -131,7 +121,6 @@ public static class Calculus
                 result += isSubtraction ? -powerResult : powerResult;
                 steps.Add($"Calculate {baseValue}^{exponent} = {powerResult}");
             }
-            // Handle terms with multiplication (e.g., 3*x or 2*5)
             else if (cleanTerm.Contains("*"))
             {
                 string[] parts = cleanTerm.Split('*');
@@ -142,7 +131,6 @@ public static class Calculus
                 result += isSubtraction ? -product : product;
                 steps.Add($"Calculate {left}*{right} = {product}");
             }
-            // Handle constant terms (e.g., numbers without variables)
             else if (double.TryParse(cleanTerm, out parsedTerm))
             {
                 result += isSubtraction ? -parsedTerm : parsedTerm;
@@ -162,6 +150,7 @@ public static class Calculus
         steps.Add($"Final result: {result}");
         return steps;
     }
+
     public static (double, List<string>) EvaluateFunctionByValue(Func<double, double> func, string funcDescription, double value)
     {
         List<string> explanationSteps = new List<string>();
