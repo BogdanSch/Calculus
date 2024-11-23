@@ -57,7 +57,7 @@ public static class Calculus
 
         if (n > 2)
             result.Append(n);
-        if (result.Length > 2 && result.ToString().EndsWith(" * "))
+        if (result.Length > 3 && result.ToString().EndsWith(" * "))
             result.Length -= 3;
 
         return result.ToString();
@@ -99,16 +99,14 @@ public static class Calculus
         string[] terms = substitutedFunc.Split('+', StringSplitOptions.RemoveEmptyEntries);
 
         double result = 0;
-        bool isSubtraction = false;
         List<string> steps = new List<string>
-    {
-        $"Substitute x = {x}: {substitutedFunc.Replace("+-", "-")}"
-    };
+        {
+            $"Substitute x = {x}: {substitutedFunc.Replace("+-", "-")}"
+        };
 
         foreach (string term in terms)
         {
             string cleanTerm = term.Trim();
-
             double parsedTerm;
 
             if (cleanTerm.Contains("^"))
@@ -118,7 +116,9 @@ public static class Calculus
                 double exponent = double.Parse(parts[1]);
                 double powerResult = Math.Pow(baseValue, exponent);
 
-                result += isSubtraction ? -powerResult : powerResult;
+                if (baseValue < 0) powerResult *= -1;
+
+                result += powerResult;
                 steps.Add($"Calculate {baseValue}^{exponent} = {powerResult}");
             }
             else if (cleanTerm.Contains("*"))
@@ -128,22 +128,13 @@ public static class Calculus
                 double right = double.Parse(parts[1]);
                 double product = left * right;
 
-                result += isSubtraction ? -product : product;
+                result += product;
                 steps.Add($"Calculate {left}*{right} = {product}");
             }
             else if (double.TryParse(cleanTerm, out parsedTerm))
             {
-                result += isSubtraction ? -parsedTerm : parsedTerm;
-                steps.Add($"{(isSubtraction ? "Subtract" : "Add")} constant {parsedTerm}");
-            }
-
-            if (cleanTerm.StartsWith("-"))
-            {
-                isSubtraction = true;
-            }
-            else
-            {
-                isSubtraction = false;
+                result += parsedTerm;
+                steps.Add($"Add constant {parsedTerm}");
             }
         }
 

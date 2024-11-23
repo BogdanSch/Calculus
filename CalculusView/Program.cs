@@ -1,34 +1,23 @@
 ﻿using Calculus;
 
-
-
 public class Program
 {
     private static void Main(string[] args)
     {
         EstimateFunction();
         Console.WriteLine("\n");
-        TestProofByInduction();
+        ProveSumOfOddNumbersByIduction();
     }
-    private static void TestProofByInduction()
-    {
-        Func<int, int> calculateSumOfOddNumbers = (int n) =>
-        {
-            int sum = 1;
-            for (int i = 3, count = 1; count < n; i += 2, count++)
-            {
-                sum += i;
-            }
-            return sum;
-        };
 
-        List<string> actualProofSteps = Proof.ProveSumOfOddNumbers(calculateSumOfOddNumbers);
-        DisplayList(actualProofSteps);
+    private static void ProveSumOfOddNumbersByIduction()
+    {
+        List<string> result = Calculus.Proof.ProveSumOfOddNumbers();
+        DisplayList(result);    
     }
     private static void EstimateFunction()
     {
-        Func<double, double> func = (x) => Math.Pow(x, 2) + 2 * x - 1;
-        string funcDescription = "x^2 + 2*x - 1";
+        Func<double, double> func = (x) => Math.Pow(x, 2) + 2 * x + 1;
+        string funcDescription = "x^2 + 2*x + 1";
         double x = 3;
 
         (double result, List<string> explanationSteps) =
