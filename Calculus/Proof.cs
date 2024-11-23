@@ -63,11 +63,8 @@ public static class Proof
     {
         List<string> proofSteps = new List<string>();
 
-        // Base Case Verification
         string baseCaseResult = baseCase(1);
         proofSteps.Add($"Base Case: {baseCaseResult}");
-
-        // If base case fails, stop the proof
         if (!statement(1))
         {
             proofSteps.Add("Base Case failed: The statement does not hold for n = 1.");
@@ -79,15 +76,16 @@ public static class Proof
         for (int k = 2; k <= 4; k++)
         {
             string stepResult = inductionStep(k);
-            proofSteps.Add($"\tInduction Step for k = {k}: {stepResult}");
+            proofSteps.Add($"Induction Step for k = {k}: {stepResult}");
 
             if (!statement(k + 1))
             {
-                proofSteps.Add($"Induction failed at k = {k}: The statement does not hold for n = {k + 1}.");
-                break;
+                proofSteps.Add($"Induction failed at n = k = {k}: The statement does not hold for n = {k + 1}.");
+                return proofSteps;
             }
         }
 
+        proofSteps.Add("Conclusion: The statement is proven by induction.");
         return proofSteps;
     }
 
@@ -124,16 +122,13 @@ public static class Proof
         };
 
         Func<int, double> squarePower = (int n) => Math.Pow(n, 2);
-
         Func<int, bool> statement = n => calculateSumOfOddNumbers(n) == squarePower(n);
-
         Func<int, string> baseCase = (int n) =>
         {
             int sum = calculateSumOfOddNumbers(1);
             double square = squarePower(1);
             return $"Verify for n = 1: SumK(1) = {sum}, 1^2 = {square}. {(sum == square ? "Holds" : "Does not hold")}";
         };
-
         Func<int, string> inductionStep = (int k) =>
         {
             int sumK = calculateSumOfOddNumbers(k);
