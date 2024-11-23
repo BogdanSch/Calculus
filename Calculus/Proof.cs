@@ -21,94 +21,45 @@ public static class Proof
 
         return result;
     }
-    //public static List<string> ProofByInduction(Func<int, int> calculateSumOfOddNumbers, int k)
-    //{
-    //    if (k < 1) throw new Exception("Error: number should be greater or equal to one!");
-
-    //    List<string> result = new List<string>();
-    //    result.Add("Proof by Induction");
-
-    //    result.Add("Step 1: Base Case (n = 1): The relation for 1 has to be held 1^2 = 1");
-    //    if(calculateSumOfOddNumbers(1) == Math.Pow(1, 2))
-    //    {
-    //        result.Add("Base case verified for n = 1.");
-    //    }
-    //    else
-    //    {
-    //        result.Add("Base case failed for n = 1. Proof invalid!");
-    //        return result;
-    //    }
-
-    //    result.Add("Step 2: Induction Hypothesis");
-    //    result.Add($"Let's assume that the sum of k odd numbers = k^2 = {k}^2={k*k}");
-
-    //    double expectedSum = Math.Round(Math.Pow(k + 1, 2));
-    //    double actualSum = Math.Pow(k, 2) + (2 * k + 1);
-
-    //    result.Add($"Inductive step: The sum of the first k + 1 odd numbers equals k^2 + (2k + 1) = (k + 1)^2 = ({k+1})^2 = {expectedSum}");
-    //    if (expectedSum == actualSum) 
-    //    {
-    //        result.Add("Induction step verified!");
-    //    }
-    //    else
-    //    {
-    //        result.Add("Induction step failed. Proof invalid!");
-    //        return result;
-    //    }
-
-    //    result.Add("Conclusion: The statement is proven by induction.");
-    //    return result;
-    //}
-    public static List<string> ProveByInduction(Func<int, bool> statement, Func<int, string> baseCase, Func<int, string> inductionStep)
+    public static List<string> ProveByInduction(
+    Func<int, bool> statement,
+    Func<int, string> baseCaseDescription,
+    Func<int, string> inductionStepDescription,
+    int maxSteps = 5)
     {
         List<string> proofSteps = new List<string>();
 
-        string baseCaseResult = baseCase(1);
-        proofSteps.Add($"Base Case: {baseCaseResult}");
+        proofSteps.Add("Step 1: Base Case:");
+        proofSteps.Add(baseCaseDescription(1));
         if (!statement(1))
         {
             proofSteps.Add("Base Case failed: The statement does not hold for n = 1.");
             return proofSteps;
         }
+        proofSteps.Add("Base Case holds. Proceeding to the induction step.");
 
-        proofSteps.Add("Induction Hypothesis: Assume the statement holds for n = k.");
 
-        for (int k = 2; k <= 4; k++)
+        proofSteps.Add("Step 2: Induction Hypothesis:");
+        proofSteps.Add("Assume the statement holds for n = k.");
+
+        proofSteps.Add("Induction Steps:\n");
+        for (int k = 2, stepIndicator = 1; k <= maxSteps; k++, stepIndicator++)
         {
-            string stepResult = inductionStep(k);
-            proofSteps.Add($"Induction Step for k = {k}: {stepResult}");
-
+            proofSteps.Add($"Step 2.{stepIndicator}:");
+            proofSteps.Add(inductionStepDescription(k));
             if (!statement(k + 1))
             {
-                proofSteps.Add($"Induction failed at n = k = {k}: The statement does not hold for n = {k + 1}.");
+                proofSteps.Add($"Induction failed: The statement does not hold for n = {k + 1}.");
                 return proofSteps;
             }
+            proofSteps.Add($"Induction step verified for k + 1.\n");
         }
 
-        proofSteps.Add("Conclusion: The statement is proven by induction.");
+        proofSteps.Add("Step 3: Induction completed. The statement holds for all tested cases.");
+        proofSteps.Add("Step 4: Conclusion. The statement is proven by induction.");
+
         return proofSteps;
     }
-
-    //public static List<string> ProveSumOfOddNumbers()
-    //{
-    //    Func<int, int> calculateSumOfOddNumbers = (int n) =>
-    //    {
-    //        int sum = 1;
-    //        for (int i = 3, count = 1; count < n; i += 2, count++)
-    //        {
-    //            sum += i;
-    //        }
-    //        return sum;
-    //    };
-    //    Func<int, double> squarePower = (int n) => Math.Pow(n, 2);
-    //    //const int checkNumber = 4;
-    //    Func<int, bool> statement = n => calculateSumOfOddNumbers(n) == squarePower(n);
-    //    Func<int, bool> baseCase = n => calculateSumOfOddNumbers(1) == squarePower(1);
-    //    Func<int, bool> inductionStep = k => calculateSumOfOddNumbers(k + 1) == squarePower(k + 1);
-
-    //    return ProveByInduction(statement, baseCase, inductionStep);
-    //    //return ProveByInduction(calculateSumOfOddNumbers, checkNumber);
-    //}
     public static List<string> ProveSumOfOddNumbers()
     {
         Func<int, int> calculateSumOfOddNumbers = (int n) =>
@@ -121,23 +72,27 @@ public static class Proof
             return sum;
         };
 
-        Func<int, double> squarePower = (int n) => Math.Pow(n, 2);
+        Func<int, int> squarePower = (int n) => n * n;
         Func<int, bool> statement = n => calculateSumOfOddNumbers(n) == squarePower(n);
-        Func<int, string> baseCase = (int n) =>
+        string conditionTemplate = "{0} == {1}";
+
+        Func<int, string> baseCaseDescription = (int n) =>
         {
-            int sum = calculateSumOfOddNumbers(1);
-            double square = squarePower(1);
-            return $"Verify for n = 1: SumK(1) = {sum}, 1^2 = {square}. {(sum == square ? "Holds" : "Does not hold")}";
+            int sum = calculateSumOfOddNumbers(n);
+            string condition = conditionTemplate.Replace("{0}", sum.ToString()).Replace("{1}", squarePower(1).ToString());
+            return $"For n = {n}. Condition: {condition}. {(statement(n) ? "Holds" : "Does not hold")}";
         };
-        Func<int, string> inductionStep = (int k) =>
+        Func<int, string> inductionStepDescription = (int k) =>
         {
             int sumK = calculateSumOfOddNumbers(k);
             int nextOdd = 2 * k + 1;
-            int sumKPlus1 = sumK + nextOdd;
-            double squareKPlus1 = squarePower(k + 1);
-            return $"Assume true for n = k: SumK(k) = {sumK}.\nAdd next odd number {nextOdd}: Sum(k+1) = {sumKPlus1}. Verify: {sumKPlus1} == {squareKPlus1}. {(sumKPlus1 == squareKPlus1 ? "Holds" : "Does not hold")}";
+            int sumKPlus1 = sumK + nextOdd;            
+            int directKPlus1Sum = squarePower(k + 1);
+
+            string condition = conditionTemplate.Replace("{0}", sumKPlus1.ToString()).Replace("{1}", directKPlus1Sum.ToString());
+            return $"Assume true for k = {k}: Sum({k}) = {sumK}.\nAdding next odd number {nextOdd}, Sum({k}+1) = Sum({k}) + {nextOdd} = {sumKPlus1}.\nCondition: {condition}. {(statement(k + 1) ? "Holds" : "Does not hold")}";
         };
 
-        return ProveByInduction(statement, baseCase, inductionStep);
+        return ProveByInduction(statement, baseCaseDescription, inductionStepDescription);
     }
 }
