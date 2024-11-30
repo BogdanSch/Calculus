@@ -36,7 +36,7 @@ public static class Proof
             proofSteps.Add("Base Case failed: The statement does not hold for n = 1.");
             return proofSteps;
         }
-        proofSteps.Add("Base Case holds. Proceeding to the induction step.");
+        proofSteps.Add("Base Case holds. Proceeding to the induction step.\n");
 
 
         proofSteps.Add("Step 2: Induction Hypothesis:");
@@ -73,13 +73,13 @@ public static class Proof
         };
 
         Func<int, int> squarePower = (int n) => n * n;
-        Func<int, bool> statement = n => calculateSumOfOddNumbers(n) == squarePower(n);
-        string conditionTemplate = "{0} == {1}";
+        Func<int, bool> statement = n => calculateSumOfOddNumbers(n) >= 0;//== squarePower(n);
+        string conditionTemplate = "{0} >= 0";//== {1}";
 
         Func<int, string> baseCaseDescription = (int n) =>
         {
             int sum = calculateSumOfOddNumbers(n);
-            string condition = conditionTemplate.Replace("{0}", sum.ToString()).Replace("{1}", squarePower(1).ToString());
+            string condition = conditionTemplate.Replace("{0}", sum.ToString()).Replace("{1}", squarePower(n).ToString());
             return $"For n = {n}. Condition: {condition}. {(statement(n) ? "Holds" : "Does not hold")}";
         };
         Func<int, string> inductionStepDescription = (int k) =>

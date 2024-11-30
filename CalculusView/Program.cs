@@ -5,7 +5,7 @@ public class Program
     private static void Main(string[] args)
     {
         EstimateFunction();
-        Console.WriteLine("\n");
+        Console.WriteLine("Proof by Induction:");
         ProveSumOfOddNumbersByIduction();
     }
 
@@ -25,6 +25,7 @@ public class Program
 
         Console.WriteLine($"Evaluated result: {result}");
         DisplayList(explanationSteps);
+        Console.WriteLine();
     }
 
     private static void DisplayList(List<string> explanationSteps)

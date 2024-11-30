@@ -6,9 +6,9 @@ public class ProofTests
     [Fact]
     public void Proof_DirectProof_ReturnListString()
     {
-        int number = 6;
+        int inputNumber = 6;
 
-        List<string> actualProofSteps = Proof.DirectProof(number);
+        List<string> actualProofSteps = Proof.DirectProof(inputNumber);
 
         actualProofSteps.Should().NotBeNullOrEmpty();
         actualProofSteps.Should().ContainInOrder(

@@ -10,6 +10,8 @@ public static class Calculus
     }
     public static string DeterminePrime(int number)
     {
+        if (number == 1 || number == 0) return "Not Prime";
+
         for (int i = 2; i < Math.Abs(number); i++)
         {
             if (number % i == 0) return "Not Prime";
@@ -32,27 +34,12 @@ public static class Calculus
         if (n <= 1) return n.ToString();
 
         StringBuilder result = new StringBuilder();
-        int countOfTwo = 0;
-        while (n % 2 == 0)
-        {
-            countOfTwo++;
-            n /= 2;
-        }
 
-        if (countOfTwo > 1) result.Append($"2^{countOfTwo} * ");
-        else if (countOfTwo == 1) result.Append($"2 * ");
+        n = ApplyPrimeFactor(n, result, 2);
 
         for (int i = 3; i <= Math.Sqrt(n); i += 2)
         {
-            int countOfTemporary = 0;
-            while (n % i == 0)
-            {
-                countOfTemporary++;
-                n /= i;
-            }
-            if (countOfTemporary > 1)
-                result.Append($"{i}^{countOfTemporary} * ");
-            else if (countOfTemporary == 1) result.Append($"{i} * ");
+            n = ApplyPrimeFactor(n, result, i);
         }
 
         if (n > 2)
@@ -62,6 +49,22 @@ public static class Calculus
 
         return result.ToString();
     }
+
+    private static int ApplyPrimeFactor(int numerator, StringBuilder result, int denominator)
+    {
+        int countOfTemporary = 0;
+        while (numerator % denominator == 0)
+        {
+            countOfTemporary++;
+            numerator /= denominator;
+        }
+        if (countOfTemporary > 1)
+            result.Append($"{denominator}^{countOfTemporary} * ");
+        else if (countOfTemporary == 1) result.Append($"{denominator} * ");
+
+        return numerator;
+    }
+
     public static int EvaluateEulerTotient(int number)
     {
         int result = 1;
@@ -144,8 +147,9 @@ public static class Calculus
 
     public static (double, List<string>) EvaluateFunctionByValue(Func<double, double> func, string funcDescription, double value)
     {
-        List<string> explanationSteps = new List<string>();
         if (!IsWithinDomain(func, value)) throw new Exception("Exception: Out of domain value");
+
+        List<string> explanationSteps = new List<string>();
 
         explanationSteps.Add($"The value {value} is within the functions domain.");
         explanationSteps.Add($"Evaluating function f(x) = {funcDescription}");
